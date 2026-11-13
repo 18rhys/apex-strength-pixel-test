@@ -8,23 +8,41 @@
 </head>
 <body>
   <h1>Apex Strength — Tracking Test</h1>
-
   <p>This is a fictional website for learning Meta Pixel.</p>
-  <p>No real bookings or customer information are collected.</p>
+  <p>No real bookings or personal information are collected.</p>
 
-  <p>Meta tracking is disabled until you explicitly agree.</p>
-
+  <h2>Step 1: Enable Tracking</h2>
+  <p>Meta tracking is disabled until you agree.</p>
   <button id="enable-tracking">
     I agree — Enable Meta Pixel Test
   </button>
-
   <p id="status">Tracking disabled.</p>
 
+  <hr>
+
+  <h2>Step 2: Simulate a Gym Enquiry</h2>
+  <p>This is a demonstration, not a real booking.</p>
+
+  <form id="lead-form">
+    <label for="goal">Choose a fictional fitness goal:</label>
+    <select id="goal" required>
+      <option value="">Select a goal</option>
+      <option value="beginner">Start training</option>
+      <option value="strength">Build strength</option>
+      <option value="fitness">Improve fitness</option>
+    </select>
+    <button type="submit">Submit Demo Enquiry</button>
+  </form>
+
+  <p id="lead-status"></p>
+
   <script>
+    let trackingEnabled = false;
+    let leadSubmitted = false;
+
     document.getElementById('enable-tracking')
       .addEventListener('click', function () {
 
-        // Meta Pixel loads only after explicit agreement.
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -39,10 +57,38 @@
         fbq('init', '1915058596144178');
         fbq('track', 'PageView');
 
+        trackingEnabled = true;
+
         document.getElementById('status').textContent =
-          'Meta Pixel test activated. PageView event sent.';
+          'Tracking enabled. PageView sent.';
 
         document.getElementById('enable-tracking').disabled = true;
+      });
+
+    document.getElementById('lead-form')
+      .addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        if (leadSubmitted) {
+          return;
+        }
+
+        if (!trackingEnabled) {
+          document.getElementById('lead-status').textContent =
+            'Please enable tracking before this test.';
+          return;
+        }
+
+        leadSubmitted = true;
+
+        fbq('track', 'Lead');
+
+        document.getElementById('lead-status').textContent =
+          'Demo enquiry completed. Lead event sent to Meta.';
+
+        document.querySelector(
+          '#lead-form button[type="submit"]'
+        ).disabled = true;
       });
   </script>
 </body>
