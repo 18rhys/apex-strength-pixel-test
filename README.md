@@ -1,0 +1,1 @@
+# apex-strength-pixel-test
